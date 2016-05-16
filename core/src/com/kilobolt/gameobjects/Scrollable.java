@@ -27,6 +27,10 @@ public class Scrollable {
 		}
 	}
 	
+	public void stop() {
+	    velocity.x = 0;
+	}
+	
 	public void reset(float newX) {
 		position.x = newX;
 		isScrolledLeft = false;

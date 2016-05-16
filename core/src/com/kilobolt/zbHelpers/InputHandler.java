@@ -2,14 +2,17 @@ package com.kilobolt.zbHelpers;
 
 import com.badlogic.gdx.InputProcessor;
 import com.kilobolt.gameobjects.Bird;
+import com.kilobolt.gameworld.GameWorld;
 
 public class InputHandler implements InputProcessor {
 
 	private Bird myBird;
+	private GameWorld myWorld;
 	
 	// запрашиваем ссылку на Bird когда inputhandler создан
-	public InputHandler(Bird bird) {
-		myBird = bird;
+	public InputHandler(GameWorld myWorld) {
+	    this.myWorld = myWorld;
+	    myBird = myWorld.getBird();
 	}
 	
 	@Override
@@ -28,10 +31,21 @@ public class InputHandler implements InputProcessor {
 	}
 
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		myBird.onClick();
-		return true;
-	}
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+        if (myWorld.isReady()) {
+            myWorld.start();
+        }
+
+        myBird.onClick();
+
+        if (myWorld.isGameOver() || myWorld.isHighScore()) {
+            // Обнулим все перменные, перейдем в GameState.READ
+            myWorld.restart();
+        }
+
+        return true;
+    }
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
